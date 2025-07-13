@@ -1,0 +1,29 @@
+{
+  "name": "@repo/db",
+  "type": "module",
+  "main": "./src/index.ts",
+  "private": true,
+  "postinstall": "bunx prisma generate",
+  "scripts": {
+    "seed": "bun run src/seed.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.11.1",
+    "prisma": "^6.11.1"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "files": [
+    "./src/**/*"
+  ]
+}
