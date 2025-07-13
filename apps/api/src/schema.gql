@@ -14,11 +14,29 @@ type Starship {
   crew: Float!
 }
 
+type Game {
+  id: ID!
+  resourceType: String!
+  leftId: String!
+  rightId: String!
+  leftValue: Int!
+  rightValue: Int!
+  winnerId: String
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   people: [Person!]!
   person(id: String!): Person
   starships: [Starship!]!
   starship(id: String!): Starship
+  game(id: String!): Game
+  games: [Game!]!
 }
 
 type Mutation {
@@ -28,6 +46,7 @@ type Mutation {
   createStarship(data: CreateStarshipInput!): Starship!
   updateStarship(id: String!, data: UpdateStarshipInput!): Starship!
   deleteStarship(id: String!): Starship!
+  createGame(data: CreateGameDto!): Game!
 }
 
 input CreatePersonInput {
@@ -48,4 +67,10 @@ input CreateStarshipInput {
 input UpdateStarshipInput {
   name: String
   crew: Float
+}
+
+input CreateGameDto {
+  resourceType: String!
+  leftId: String!
+  rightId: String!
 }
