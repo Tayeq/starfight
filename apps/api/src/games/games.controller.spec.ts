@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GameResolver } from './game.resolver';
-import { GameService } from './game.service';
+import { GamesController } from './games.controller';
+import { GamesService } from './games.service';
 import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
-import { TEST_GAME, TEST_GAME_ID } from './game.mock';
+import { TEST_GAME, TEST_GAME_ID } from './games.mock';
 
-describe('GameResolver', () => {
-    let resolver: GameResolver;
-    let service: GameService;
+describe('GamesController', () => {
+    let controller: GamesController;
+    let service: GamesService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            controllers: [GamesController],
             providers: [
-                GameResolver,
                 {
-                    provide: GameService,
+                    provide: GamesService,
                     useValue: {
                         createGame: jest.fn().mockResolvedValue(TEST_GAME),
                         getGame: jest.fn().mockResolvedValue(TEST_GAME),
@@ -22,29 +22,29 @@ describe('GameResolver', () => {
                 },
             ],
         }).compile();
-        resolver = module.get<GameResolver>(GameResolver);
-        service = module.get<GameService>(GameService);
+        controller = module.get<GamesController>(GamesController);
+        service = module.get<GamesService>(GamesService);
     });
 
     it('should be defined', () => {
-        expect(resolver).toBeDefined();
+        expect(controller).toBeDefined();
     });
 
     it('should create a game', async () => {
         const dto: CreateGameDto = { resourceType: 'person', leftId: 'p1', rightId: 'p2' };
-        const result = await resolver.createGame(dto);
+        const result = await controller.create(dto);
         expect(result).toEqual(TEST_GAME);
         expect(service.createGame).toHaveBeenCalledWith(dto);
     });
 
     it('should get a game', async () => {
-        const result = await resolver.game(TEST_GAME_ID);
+        const result = await controller.get(TEST_GAME_ID);
         expect(result).toEqual(TEST_GAME);
         expect(service.getGame).toHaveBeenCalledWith(TEST_GAME_ID);
     });
 
     it('should list games', async () => {
-        const result = await resolver.games();
+        const result = await controller.list();
         expect(result).toEqual([TEST_GAME]);
         expect(service.listGames).toHaveBeenCalled();
     });

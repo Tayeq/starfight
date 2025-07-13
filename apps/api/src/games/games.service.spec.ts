@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GameService } from './game.service';
+import { GamesService } from './games.service';
 import { PrismaService } from '../prisma.service';
 import { CreateGameDto, ResourceType } from '@repo/api/game/dto/create-game.dto';
-import { createGamePrismaMock, TEST_GAME, TEST_GAME_ID } from './game.mock';
+import { createGamesPrismaMock, TEST_GAME, TEST_GAME_ID } from './games.mock';
 
-describe('GameService', () => {
-    let service: GameService;
+describe('GamesService', () => {
+    let service: GamesService;
     let prisma: any;
 
     const mockPerson = { id: 'p1', name: 'Luke', mass: 80 };
@@ -29,12 +29,12 @@ describe('GameService', () => {
                     return null;
                 }),
             },
-            game: createGamePrismaMock(),
+            game: createGamesPrismaMock(),
         };
         const module: TestingModule = await Test.createTestingModule({
-            providers: [GameService, { provide: PrismaService, useValue: prisma }],
+            providers: [GamesService, { provide: PrismaService, useValue: prisma }],
         }).compile();
-        service = module.get<GameService>(GameService);
+        service = module.get<GamesService>(GamesService);
     });
 
     it('should create a person game and pick winner', async () => {

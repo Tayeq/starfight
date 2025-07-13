@@ -7,11 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum ResourceType {
-    person
-    starship
-}
-
 model Person {
     id   String @id @default(uuid())
     name String
@@ -25,18 +20,12 @@ model Starship {
 }
 
 model Game {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-    scores    Score[]
-}
-
-model Score {
-    id           String       @id @default(uuid())
-    game         Game         @relation(fields: [gameId], references: [id])
-    gameId       String
-    resourceType ResourceType
+    id           String   @id @default(uuid())
+    resourceType String
     leftId       String
     rightId      String
-    winnerId     String
-    playedAt     DateTime     @default(now())
+    leftValue    Int
+    rightValue   Int
+    winnerId     String?
+    createdAt    DateTime @default(now())
 }

@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { PeopleModule } from './people/people.module';
 import { StarshipsModule } from './starships/starships.module';
-import { GameModule } from './game/game.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { GameModule } from './game/game.module';
     }),
     PeopleModule,
     StarshipsModule,
-    GameModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

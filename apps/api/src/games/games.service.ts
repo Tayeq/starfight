@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { CreateGameDto, ResourceType } from '@repo/api/game/dto/create-game.dto';
 
 @Injectable()
-export class GameService {
+export class GamesService {
     constructor(private readonly prisma: PrismaService) { }
 
     async createGame(dto: CreateGameDto) {

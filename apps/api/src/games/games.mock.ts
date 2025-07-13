@@ -10,7 +10,7 @@ export const TEST_GAME = {
     createdAt: new Date(),
 };
 
-export function createGamePrismaMock(overrides = {}) {
+export function createGamesPrismaMock(overrides = {}) {
     return {
         create: jest.fn().mockImplementation(({ data }) => ({ ...data, id: TEST_GAME_ID, createdAt: new Date() })),
         findUnique: jest.fn().mockResolvedValue(TEST_GAME),
