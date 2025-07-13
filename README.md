@@ -1,120 +1,100 @@
-# Turborepo starter
+# Starfight Fullstack App
 
-This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+This is a fullstack application for comparing random Star Wars people or starships, built with React, Next.js, NestJS, GraphQL, Prisma, and Postgres.
 
-## Using this example
+## Monorepo Structure
 
-Run the following command:
+- `apps/web` — Frontend (Next.js, React, TypeScript)
+- `apps/api` — Backend API (NestJS, GraphQL, TypeScript)
+- `packages/db` — Database access (Prisma, Postgres)
+- `packages/ui` — Shared UI components (React, MUI)
 
-```bash
-npx create-turbo@latest -e with-nestjs
+## Prerequisites
+
+- [Docker](https://www.docker.com/get-started) installed and running
+- [Bun](https://bun.sh/) installed
+
+## Getting Started
+
+### 1. Start the Postgres Database
+
+From the project root directory, run:
+
+```sh
+docker-compose up -d
 ```
 
-## What's inside?
+This will start a local Postgres instance on port 5432 with the following credentials:
 
-This Turborepo includes the following packages/apps:
+- **User:** postgres
+- **Password:** postgres
+- **Database:** postgres
 
-### Apps and Packages
+### 2. Configure Environment Variables
 
-    .
-    ├── apps
-    │   ├── api                       # NestJS app (https://nestjs.com).
-    │   └── web                       # Next.js app (https://nextjs.org).
-    └── packages
-        ├── @repo/api                 # Shared `NestJS` resources.
-        ├── @repo/eslint-config       # `eslint` configurations (includes `prettier`)
-        ├── @repo/jest-config         # `jest` configurations
-        ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
-        └── @repo/ui                  # Shareable stub React component library.
+Create a `.env` file in `packages/db` with the following content:
 
-Each package and application are 100% [TypeScript](https://www.typescriptlang.org/) safe.
-
-### Utilities
-
-This `Turborepo` has some additional tools already set for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type-safety
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Jest](https://prettier.io) & [Playwright](https://playwright.dev/) for testing
-
-### Commands
-
-This `Turborepo` already configured useful commands for all your apps and packages.
-
-#### Build
-
-```bash
-# Will build all the app & packages with the supported `build` script.
-pnpm run build
-
-# ℹ️ If you plan to only build apps individually,
-# Please make sure you've built the packages first.
+```
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
 ```
 
-#### Develop
+### 3. Install Dependencies
 
-```bash
-# Will run the development server for all the app & packages with the supported `dev` script.
-pnpm run dev
+From the project root, run:
+
+```sh
+bun install
 ```
 
-#### test
+### 4. Run Prisma Migrations
 
-```bash
-# Will launch a test suites for all the app & packages with the supported `test` script.
-pnpm run test
+From the `packages/db` directory, run:
 
-# You can launch e2e testes with `test:e2e`
-pnpm run test:e2e
-
-# See `@repo/jest-config` to customize the behavior.
+```sh
+bunx prisma generate
+bunx prisma migrate dev --name init
 ```
 
-#### Lint
+### 5. Start the Backend API
 
-```bash
-# Will lint all the app & packages with the supported `lint` script.
-# See `@repo/eslint-config` to customize the behavior.
-pnpm run lint
+From the project root, run:
+
+```sh
+bun run --filter=apps/api start
 ```
 
-#### Format
+The API will be available at `http://localhost:3000/graphql` (default port, see `apps/api` config).
 
-```bash
-# Will format all the supported `.ts,.js,json,.tsx,.jsx` files.
-# See `@repo/eslint-config/prettier-base.js` to customize the behavior.
-pnpm format
+### 6. Start the Frontend
+
+From the project root, run:
+
+```sh
+bun run --filter=apps/web dev
 ```
 
-### Remote Caching
+The frontend will be available at `http://localhost:3000` (default port, see `apps/web` config).
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## Useful Commands
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- `bun run --filter=apps/api test` — run backend tests
+- `bun run --filter=apps/web test` — run frontend tests
+- `bunx prisma studio` (in `packages/db`) — open Prisma Studio (GUI for your database)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+# Example Environment Files
 
-```bash
-npx turbo login
+Each app/package contains an `.env.example` file with example environment variables. To configure your environment, copy the example file to `.env` and adjust the values as needed:
+
+- `apps/web/.env.example` → `apps/web/.env`
+- `apps/api/.env.example` → `apps/api/.env`
+- `packages/db/.env.example` → `packages/db/.env`
+
+Example command:
+
+```sh
+cp apps/web/.env.example apps/web/.env
+cp apps/api/.env.example apps/api/.env
+cp packages/db/.env.example packages/db/.env
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```bash
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+Make sure to update the values to match your local setup if needed.

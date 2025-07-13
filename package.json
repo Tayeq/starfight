@@ -11,13 +11,17 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prisma:studio": "cd packages/db && bunx prisma studio",
+    "prisma:generate": "cd packages/db && bunx prisma generate",
+    "prisma:migrate": "cd packages/db && bunx prisma migrate dev"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "prettier": "^3.2.5",
-    "turbo": "^2.5.4"
+    "turbo": "^2.5.4",
+    "@types/bun": "latest"
   },
   "engines": {
     "node": ">=18"
@@ -26,5 +30,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "peerDependencies": {
+    "typescript": "^5"
+  }
 }

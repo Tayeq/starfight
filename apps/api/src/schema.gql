@@ -1,0 +1,51 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Person {
+  id: ID!
+  name: String!
+  mass: Float!
+}
+
+type Starship {
+  id: ID!
+  name: String!
+  crew: Float!
+}
+
+type Query {
+  people: [Person!]!
+  person(id: String!): Person
+  starships: [Starship!]!
+  starship(id: String!): Starship
+}
+
+type Mutation {
+  createPerson(data: CreatePersonInput!): Person!
+  updatePerson(id: String!, data: UpdatePersonInput!): Person!
+  deletePerson(id: String!): Person!
+  createStarship(data: CreateStarshipInput!): Starship!
+  updateStarship(id: String!, data: UpdateStarshipInput!): Starship!
+  deleteStarship(id: String!): Starship!
+}
+
+input CreatePersonInput {
+  name: String!
+  mass: Float!
+}
+
+input UpdatePersonInput {
+  name: String
+  mass: Float
+}
+
+input CreateStarshipInput {
+  name: String!
+  crew: Float!
+}
+
+input UpdateStarshipInput {
+  name: String
+  crew: Float
+}
