@@ -5,7 +5,8 @@
   "private": true,
   "postinstall": "bunx prisma generate",
   "scripts": {
-    "seed": "bun run src/seed.ts"
+    "generate": "prisma generate",
+    "generate:watch": "bunx prisma generate --watch"
   },
   "devDependencies": {
     "@types/bun": "latest"

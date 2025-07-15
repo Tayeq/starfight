@@ -16,6 +16,16 @@ You can start editing the demo **APIs** by modifying [linksService](./src/links/
 
 If you plan to only build this app. Please make sure you've built the packages first.
 
+## Environment Variables
+
+Copy the example file and create your own `.env`:
+
+```
+cp .env.example .env
+```
+
+Then, edit the file if needed (e.g. set your API_KEY).
+
 ## Learn More
 
 To learn more about NestJs, take a look at the following resources:

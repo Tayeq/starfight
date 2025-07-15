@@ -32,11 +32,15 @@ This will start a local Postgres instance on port 5432 with the following creden
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file in `packages/db` with the following content:
+Copy the example environment files and create your own `.env` files:
 
 ```
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
+cp packages/db/.env.example packages/db/.env
 ```
+
+Then, edit the files if needed (e.g. set your API_KEY or DATABASE_URL).
 
 ### 3. Install Dependencies
 

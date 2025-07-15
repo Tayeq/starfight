@@ -31,6 +31,16 @@ Create a `.env` file in `packages/db` with the following content:
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
 ```
 
+## Environment Variables
+
+Copy the example file and create your own `.env`:
+
+```
+cp .env.example .env
+```
+
+Then, edit the file if needed (e.g. set your DATABASE_URL).
+
 ### 3. Install Dependencies
 
 From the project root, run:
