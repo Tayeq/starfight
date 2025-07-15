@@ -16,13 +16,14 @@ type Starship {
 
 type Game {
   id: ID!
-  resourceType: String!
-  leftId: String!
-  rightId: String!
-  leftValue: Int!
-  rightValue: Int!
-  winnerId: String
+  resourceType: ResourceType!
   createdAt: DateTime!
+  rounds: [Round!]
+}
+
+enum ResourceType {
+  PERSON
+  STARSHIP
 }
 
 """
@@ -30,12 +31,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Round {
+  id: ID!
+  gameId: String!
+  leftId: String!
+  rightId: String!
+  leftValue: Float!
+  rightValue: Float!
+  winnerId: String
+  createdAt: DateTime!
+  left: ResourceUnion
+  right: ResourceUnion
+  winner: ResourceUnion
+}
+
+union ResourceUnion = Person | Starship
+
 type Query {
   people: [Person!]!
   person(id: String!): Person
   starships: [Starship!]!
   starship(id: String!): Starship
-  game(id: String!): Game
+  game(id: ID!): Game
   games: [Game!]!
 }
 
@@ -47,6 +64,7 @@ type Mutation {
   updateStarship(id: String!, data: UpdateStarshipInput!): Starship!
   deleteStarship(id: String!): Starship!
   createGame(data: CreateGameDto!): Game!
+  playRound(data: PlayRoundDto!): Round!
 }
 
 input CreatePersonInput {
@@ -70,7 +88,9 @@ input UpdateStarshipInput {
 }
 
 input CreateGameDto {
-  resourceType: String!
-  leftId: String!
-  rightId: String!
+  resourceType: ResourceType!
+}
+
+input PlayRoundDto {
+  gameId: ID!
 }

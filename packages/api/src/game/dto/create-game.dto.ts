@@ -1,19 +1,18 @@
-import { InputType, Field } from '@nestjs/graphql';
-import { IsUUID, IsIn } from 'class-validator';
-
-export type ResourceType = 'person' | 'starship';
+import { InputType, Field, ID } from '@nestjs/graphql';
+import { IsIn, IsNotEmpty, IsUUID } from 'class-validator';
+import { GameResourceType } from '@repo/types';
 
 @InputType()
 export class CreateGameDto {
-    @Field()
-    @IsIn(['person', 'starship'])
-    resourceType: ResourceType;
+    @Field(() => GameResourceType)
+    @IsIn(Object.values(GameResourceType))
+    resourceType: GameResourceType;
+}
 
-    @Field()
+@InputType()
+export class PlayRoundDto {
+    @Field(() => ID)
     @IsUUID()
-    leftId: string;
-
-    @Field()
-    @IsUUID()
-    rightId: string;
+    @IsNotEmpty()
+    gameId: string;
 } 

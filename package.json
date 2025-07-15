@@ -35,5 +35,9 @@
   ],
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@nestjs/config": "^4.0.2",
+    "cross-fetch": "^4.1.0"
   }
 }

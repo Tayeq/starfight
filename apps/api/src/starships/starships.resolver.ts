@@ -1,18 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { ObjectType, Field, ID, InputType } from '@nestjs/graphql';
+import { Starship } from '@repo/api/starship/entities/starship.entity';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { PrismaService } from '../prisma.service';
-
-@ObjectType()
-export class Starship {
-    @Field(() => ID)
-    id: string;
-
-    @Field()
-    name: string;
-
-    @Field()
-    crew: number;
-}
 
 @InputType()
 export class CreateStarshipInput {

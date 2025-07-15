@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "ResourceType" AS ENUM ('person', 'starship');
+CREATE TYPE "ResourceType" AS ENUM ('PERSON', 'STARSHIP');
 
 -- CreateTable
 CREATE TABLE "Person" (

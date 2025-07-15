@@ -3,6 +3,7 @@ import { GamesController } from './games.controller';
 import { GamesService } from './games.service';
 import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
 import { TEST_GAME, TEST_GAME_ID } from './games.mock';
+import { GameResourceType } from '@repo/types';
 
 describe('GamesController', () => {
     let controller: GamesController;
@@ -31,7 +32,7 @@ describe('GamesController', () => {
     });
 
     it('should create a game', async () => {
-        const dto: CreateGameDto = { resourceType: 'person', leftId: 'p1', rightId: 'p2' };
+        const dto: CreateGameDto = { resourceType: GameResourceType.PERSON };
         const result = await controller.create(dto);
         expect(result).toEqual(TEST_GAME);
         expect(service.createGame).toHaveBeenCalledWith(dto);

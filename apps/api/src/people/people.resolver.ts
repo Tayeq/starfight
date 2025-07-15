@@ -1,18 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { ObjectType, Field, ID, InputType } from '@nestjs/graphql';
+import { Person } from '@repo/api/person/entities/person.entity';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { PrismaService } from '../prisma.service';
-
-@ObjectType()
-export class Person {
-    @Field(() => ID)
-    id: string;
-
-    @Field()
-    name: string;
-
-    @Field()
-    mass: number;
-}
 
 @InputType()
 export class CreatePersonInput {

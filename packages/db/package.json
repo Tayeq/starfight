@@ -26,5 +26,8 @@
   },
   "files": [
     "./src/**/*"
-  ]
+  ],
+  "prisma": {
+    "seed": "bun run src/seed.ts"
+  }
 }

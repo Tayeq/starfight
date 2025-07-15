@@ -1,100 +1,100 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GamesService } from './games.service';
 import { PrismaService } from '../prisma.service';
-import { CreateGameDto, ResourceType } from '@repo/api/game/dto/create-game.dto';
-import { createGamesPrismaMock, TEST_GAME, TEST_GAME_ID } from './games.mock';
+import { CreateGameDto, PlayRoundDto } from '@repo/api/game/dto/create-game.dto';
+import { GameResourceType } from '@repo/types';
+import { createGamesPrismaMock, TEST_GAME, TEST_GAME_ID, createPersonPrismaMock, createStarshipPrismaMock, createRoundPrismaMock, TEST_ROUND, TEST_ROUND_ID } from './games.mock';
 
 describe('GamesService', () => {
     let service: GamesService;
-    let prisma: any;
-
-    const mockPerson = { id: 'p1', name: 'Luke', mass: 80 };
-    const mockPerson2 = { id: 'p2', name: 'Vader', mass: 120 };
-    const mockStarship = { id: 's1', name: 'X-Wing', crew: 1 };
-    const mockStarship2 = { id: 's2', name: 'Falcon', crew: 4 };
+    let prisma: PrismaService;
 
     beforeEach(async () => {
-        prisma = {
-            person: {
-                findUnique: jest.fn((args) => {
-                    if (args.where.id === 'p1') return mockPerson;
-                    if (args.where.id === 'p2') return mockPerson2;
-                    return null;
-                }),
-            },
-            starship: {
-                findUnique: jest.fn((args) => {
-                    if (args.where.id === 's1') return mockStarship;
-                    if (args.where.id === 's2') return mockStarship2;
-                    return null;
-                }),
-            },
-            game: createGamesPrismaMock(),
-        };
         const module: TestingModule = await Test.createTestingModule({
-            providers: [GamesService, { provide: PrismaService, useValue: prisma }],
+            providers: [GamesService, {
+                provide: PrismaService, useValue: {
+                    person: createPersonPrismaMock(),
+                    starship: createStarshipPrismaMock(),
+                    game: createGamesPrismaMock(),
+                    round: createRoundPrismaMock(),
+                }
+            }],
         }).compile();
         service = module.get<GamesService>(GamesService);
+        prisma = module.get<PrismaService>(PrismaService);
     });
 
-    it('should create a person game and pick winner', async () => {
-        const dto: CreateGameDto = { resourceType: 'person', leftId: 'p1', rightId: 'p2' };
+    it('should create a game (person)', async () => {
+        const dto: CreateGameDto = { resourceType: GameResourceType.PERSON };
         const result = await service.createGame(dto);
         expect(result).toMatchObject({
-            id: TEST_GAME.id,
-            leftId: TEST_GAME.leftId,
-            rightId: TEST_GAME.rightId,
-            leftValue: TEST_GAME.leftValue,
-            rightValue: TEST_GAME.rightValue,
-            resourceType: TEST_GAME.resourceType,
-            winnerId: TEST_GAME.winnerId,
+            id: TEST_GAME_ID,
+            resourceType: GameResourceType.PERSON,
         });
         expect(result.createdAt).toBeInstanceOf(Date);
         expect(prisma.game.create).toHaveBeenCalled();
     });
 
-    it('should create a starship game and pick winner', async () => {
-        const dto: CreateGameDto = { resourceType: 'starship', leftId: 's2', rightId: 's1' };
+    it('should create a game (starship)', async () => {
+        const dto: CreateGameDto = { resourceType: GameResourceType.STARSHIP };
         const result = await service.createGame(dto);
-        expect(result.winnerId).toBe('s2');
-        expect(result.leftValue).toBe(4);
-        expect(result.rightValue).toBe(1);
+        expect(result).toMatchObject({
+            id: TEST_GAME_ID,
+            resourceType: GameResourceType.STARSHIP,
+        });
+        expect(result.createdAt).toBeInstanceOf(Date);
         expect(prisma.game.create).toHaveBeenCalled();
     });
 
-    it('should throw if resource not found', async () => {
-        const dto: CreateGameDto = { resourceType: 'person', leftId: 'notfound', rightId: 'p2' };
-        await expect(service.createGame(dto)).rejects.toThrow('Person not found');
+    it('should play a round (person)', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ id: TEST_GAME_ID, resourceType: GameResourceType.PERSON });
+        const result = await service.playRound({ gameId: TEST_GAME_ID });
+        expect(result).toHaveProperty('id');
+        expect(result.left).toBeDefined();
+        expect(result.right).toBeDefined();
+        expect(result.leftValue).toBeDefined();
+        expect(result.rightValue).toBeDefined();
+        expect(prisma.round.create).toHaveBeenCalled();
     });
 
-    it('should throw if resourceType is invalid', async () => {
-        const dto = { resourceType: 'invalid' as ResourceType, leftId: 'p1', rightId: 'p2' };
-        await expect(service.createGame(dto)).rejects.toThrow('Invalid resource type');
+    it('should play a round (starship)', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ id: TEST_GAME_ID, resourceType: GameResourceType.STARSHIP });
+        const result = await service.playRound({ gameId: TEST_GAME_ID });
+        expect(result).toHaveProperty('id');
+        expect(result.left).toBeDefined();
+        expect(result.right).toBeDefined();
+        expect(result.leftValue).toBeDefined();
+        expect(result.rightValue).toBeDefined();
+        expect(prisma.round.create).toHaveBeenCalled();
+    });
+
+    it('should throw if game not found in playRound', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue(null);
+        await expect(service.playRound({ gameId: 'notfound' })).rejects.toThrow('Game not found');
     });
 
     it('should get game', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ ...TEST_GAME, rounds: [TEST_ROUND] });
         const result = await service.getGame(TEST_GAME_ID);
         expect(result).toMatchObject({
             id: TEST_GAME.id,
-            leftId: TEST_GAME.leftId,
-            rightId: TEST_GAME.rightId,
-            leftValue: TEST_GAME.leftValue,
-            rightValue: TEST_GAME.rightValue,
             resourceType: TEST_GAME.resourceType,
-            winnerId: TEST_GAME.winnerId,
+            rounds: [TEST_ROUND],
         });
         expect(result.createdAt).toBeInstanceOf(Date);
-        expect(prisma.game.findUnique).toHaveBeenCalledWith({ where: { id: TEST_GAME_ID } });
+        expect(prisma.game.findUnique).toHaveBeenCalledWith({ where: { id: TEST_GAME_ID }, include: { rounds: true } });
     });
 
     it('should throw if game not found', async () => {
-        prisma.game.findUnique.mockResolvedValueOnce(null);
+        prisma.game.findUnique = jest.fn().mockResolvedValueOnce(null);
         await expect(service.getGame('notfound')).rejects.toThrow('Game not found');
     });
 
     it('should list games', async () => {
+        prisma.game.findMany = jest.fn().mockResolvedValue([{ ...TEST_GAME, rounds: [TEST_ROUND] }]);
         const result = await service.listGames();
         expect(Array.isArray(result)).toBe(true);
+        expect(result[0]).toHaveProperty('rounds');
         expect(prisma.game.findMany).toHaveBeenCalled();
     });
 }); 

@@ -7,5 +7,11 @@
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
   "exclude": ["node_modules"]
 }

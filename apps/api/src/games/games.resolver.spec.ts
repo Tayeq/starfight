@@ -3,6 +3,7 @@ import { GamesResolver } from './games.resolver';
 import { GamesService } from './games.service';
 import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
 import { TEST_GAME, TEST_GAME_ID } from './games.mock';
+import { GameResourceType } from '@repo/types';
 
 describe('GamesResolver', () => {
     let resolver: GamesResolver;
@@ -31,7 +32,7 @@ describe('GamesResolver', () => {
     });
 
     it('should create a game', async () => {
-        const dto: CreateGameDto = { resourceType: 'person', leftId: 'p1', rightId: 'p2' };
+        const dto: CreateGameDto = { resourceType: GameResourceType.PERSON };
         const result = await resolver.createGame(dto);
         expect(result).toEqual(TEST_GAME);
         expect(service.createGame).toHaveBeenCalledWith(dto);
