@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GamesController } from './games.controller';
 import { GamesService } from './games.service';
 import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
-import { TEST_GAME, TEST_GAME_ID } from './games.mock';
+import { PlayRoundDto } from '@repo/api/game/dto/play-round.dto';
+import { TEST_GAME, TEST_GAME_ID, TEST_ROUND } from './games.mock';
 import { GameResourceType } from '@repo/types';
 
 describe('GamesController', () => {
@@ -19,6 +20,7 @@ describe('GamesController', () => {
                         createGame: jest.fn().mockResolvedValue(TEST_GAME),
                         getGame: jest.fn().mockResolvedValue(TEST_GAME),
                         listGames: jest.fn().mockResolvedValue([TEST_GAME]),
+                        playRound: jest.fn().mockResolvedValue(TEST_ROUND),
                     },
                 },
             ],
@@ -48,5 +50,12 @@ describe('GamesController', () => {
         const result = await controller.list();
         expect(result).toEqual([TEST_GAME]);
         expect(service.listGames).toHaveBeenCalled();
+    });
+
+    it('should play a round', async () => {
+        const dto: PlayRoundDto = { gameId: TEST_GAME_ID };
+        const result = await controller.playRound(dto);
+        expect(result).toEqual(TEST_ROUND);
+        expect(service.playRound).toHaveBeenCalledWith(dto);
     });
 }); 

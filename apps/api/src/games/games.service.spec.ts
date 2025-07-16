@@ -83,7 +83,7 @@ describe('GamesService', () => {
             rounds: [TEST_ROUND],
         });
         expect(result.createdAt).toBeInstanceOf(Date);
-        expect(prisma.game.findUnique).toHaveBeenCalledWith({ where: { id: TEST_GAME_ID }, include: { rounds: true } });
+        expect(prisma.game.findUnique).toHaveBeenCalledWith({ where: { id: TEST_GAME_ID }, include: { rounds: { orderBy: { createdAt: 'desc' } } } });
     });
 
     it('should throw if game not found', async () => {
@@ -97,5 +97,34 @@ describe('GamesService', () => {
         expect(Array.isArray(result)).toBe(true);
         expect(result[0]).toHaveProperty('rounds');
         expect(prisma.game.findMany).toHaveBeenCalled();
+    });
+
+    it('should throw if not enough people in playRound', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ id: TEST_GAME_ID, resourceType: GameResourceType.PERSON });
+        prisma.person.findMany = jest.fn().mockResolvedValue([{ id: 'p1', name: 'Luke', mass: 80 }]);
+        await expect(service.playRound({ gameId: TEST_GAME_ID })).rejects.toThrow('Not enough people');
+    });
+
+    it('should throw if not enough starships in playRound', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ id: TEST_GAME_ID, resourceType: GameResourceType.STARSHIP });
+        prisma.starship.findMany = jest.fn().mockResolvedValue([{ id: 's1', name: 'X-Wing', crew: 1 }]);
+        await expect(service.playRound({ gameId: TEST_GAME_ID })).rejects.toThrow('Not enough starships');
+    });
+
+    it('should throw if resource type is invalid in playRound', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue({ id: TEST_GAME_ID, resourceType: 'INVALID' });
+        await expect(service.playRound({ gameId: TEST_GAME_ID })).rejects.toThrow('Invalid resource type');
+    });
+
+    it('should throw if game not found in getGame', async () => {
+        prisma.game.findUnique = jest.fn().mockResolvedValue(null);
+        await expect(service.getGame('notfound')).rejects.toThrow('Game not found');
+    });
+
+    it('should return empty array if no games in listGames', async () => {
+        prisma.game.findMany = jest.fn().mockResolvedValue([]);
+        const result = await service.listGames();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toBe(0);
     });
 }); 

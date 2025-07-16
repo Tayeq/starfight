@@ -1,7 +1,7 @@
 export const TEST_GAME_ID = '11111111-1111-1111-1111-111111111111';
 export const TEST_GAME = {
     id: TEST_GAME_ID,
-    resourceType: 'person',
+    resourceType: 'PERSON',
     leftId: 'p1',
     rightId: 'p2',
     leftValue: 80,
