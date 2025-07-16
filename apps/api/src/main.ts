@@ -10,6 +10,21 @@ async function bootstrap() {
   // Set trust proxy on Express instance to handle HTTPS correctly behind Traefik/Caddy
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', 1);
+
+  // Logger for debugging protocol and forwarded headers
+  expressApp.use((req, res, next) => {
+    console.log(
+      'Request:',
+      req.method,
+      req.originalUrl,
+      '| protocol:',
+      req.protocol,
+      '| x-forwarded-proto:',
+      req.headers['x-forwarded-proto']
+    );
+    next();
+  });
+
   await app.listen(3000);
 }
 bootstrap();
