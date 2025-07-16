@@ -21,6 +21,10 @@
       "cache": false,
       "persistent": true
     },
+    "start:prod": {
+      "cache": false,
+      "persistent": true
+    },
     "lint": {},
     "test": {},
     "test:e2e": {}
