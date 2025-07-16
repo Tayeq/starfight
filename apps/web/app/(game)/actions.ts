@@ -7,6 +7,7 @@ export async function createGame(type: GameResourceType) {
         const id = await createGameAction(type);
         return { id };
     } catch (error: any) {
-        return { error: error?.message || "Unknown error" };
+        console.error(error);
+        return { error: "Unknown error" };
     }
 } 
