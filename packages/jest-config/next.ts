@@ -10,7 +10,12 @@ const createJestConfig = nextJest({
 
 const config = {
   ...baseConfig,
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   moduleFileExtensions: [...baseConfig.moduleFileExtensions, 'jsx', 'tsx'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
 } as const satisfies Config;
 
 export default createJestConfig(config);
