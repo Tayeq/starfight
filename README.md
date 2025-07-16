@@ -1,9 +1,5 @@
 # Starfight Fullstack App
 
-## 🌐 Demo
-
-Public demo is available at: [https://starfight.setdroy.pl/](https://starfight.setdroy.pl/)
-
 This is a fullstack application for comparing random Star Wars people or starships, built with React, Next.js, NestJS, GraphQL, Prisma, and Postgres.
 
 ## 🚀 Quick Start
