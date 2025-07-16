@@ -5,22 +5,22 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["DATABASE_URL", "API_KEY"]
+      "env": ["DATABASE_URL", "API_KEY", "GRAPHQL_ENDPOINT"]
     },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": ["DATABASE_URL", "API_KEY"]
+      "env": ["DATABASE_URL", "API_KEY", "GRAPHQL_ENDPOINT"]
     },
     "start": {
       "cache": false,
       "persistent": true,
-      "env": ["DATABASE_URL", "API_KEY"]
+      "env": ["DATABASE_URL", "API_KEY", "GRAPHQL_ENDPOINT"]
     },
     "start:prod": {
       "cache": false,
       "persistent": true,
-      "env": ["DATABASE_URL", "API_KEY"]
+      "env": ["DATABASE_URL", "API_KEY", "GRAPHQL_ENDPOINT"]
     },
     "clean": {
       "cache": false
