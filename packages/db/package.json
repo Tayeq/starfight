@@ -6,6 +6,7 @@
   "postinstall": "bunx prisma generate",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
     "generate": "prisma generate",
     "generate:watch": "bunx prisma generate --watch"
   },

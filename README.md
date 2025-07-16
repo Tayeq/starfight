@@ -2,6 +2,34 @@
 
 This is a fullstack application for comparing random Star Wars people or starships, built with React, Next.js, NestJS, GraphQL, Prisma, and Postgres.
 
+## 🚀 Quick Start
+
+**TL;DR - Run everything with one command:**
+
+```bash
+# 1. Start database
+docker-compose up -d
+
+# 2. Copy .env.example to .env in all apps/packages
+cp apps/web/.env.example apps/web/.env
+cp apps/api/.env.example apps/api/.env
+cp packages/db/.env.example packages/db/.env
+
+# 3. Setup everything (install deps, generate Prisma, run migrations)
+bun run setup
+
+# 4. Start both frontend and backend
+bun run dev
+```
+
+**That's it!** 🎉
+
+- Frontend: http://localhost:3001
+- Backend API: http://localhost:3000
+- GraphQL Playground: http://localhost:3000/graphql
+
+---
+
 ## Monorepo Structure
 
 - `apps/web` — Frontend (Next.js, React, TypeScript)
@@ -32,15 +60,18 @@ This will start a local Postgres instance on port 5432 with the following creden
 
 ### 2. Configure Environment Variables
 
-Copy the example environment files and create your own `.env` files:
+Create `.env` files in the root directory with:
 
-```
-cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
-cp packages/db/.env.example packages/db/.env
-```
+```env
+# Database Configuration
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
 
-Then, edit the files if needed (e.g. set your API_KEY or DATABASE_URL).
+# API Configuration (optional)
+API_KEY="your-api-key-here"
+
+# Environment
+NODE_ENV="development"
+```
 
 ### 3. Install Dependencies
 
@@ -81,24 +112,88 @@ The frontend will be available at `http://localhost:3000` (default port, see `ap
 
 ## Useful Commands
 
-- `bun run --filter=apps/api test` — run backend tests
-- `bun run --filter=apps/web test` — run frontend tests
-- `bunx prisma studio` (in `packages/db`) — open Prisma Studio (GUI for your database)
+### Development
 
-# Example Environment Files
+- `bun run dev` — Start both frontend and backend in development mode
+- `bun run build` — Build all packages and applications
+- `bun run start` — Start both frontend and backend in production mode
+- `bun run setup` — Setup everything (install deps, generate Prisma, run migrations)
+- `bun run clean` — Clean up build artifacts
+- `bun run reset` — Reset database and migrations
 
-Each app/package contains an `.env.example` file with example environment variables. To configure your environment, copy the example file to `.env` and adjust the values as needed:
+### Testing
 
-- `apps/web/.env.example` → `apps/web/.env`
-- `apps/api/.env.example` → `apps/api/.env`
-- `packages/db/.env.example` → `packages/db/.env`
+- `bun run test` — Run all tests
+- `bun run --filter=apps/api test` — Run backend tests only
+- `bun run --filter=apps/web test` — Run frontend tests only
 
-Example command:
+### Database
 
-```sh
-cp apps/web/.env.example apps/web/.env
-cp apps/api/.env.example apps/api/.env
-cp packages/db/.env.example packages/db/.env
+- `bunx prisma studio` (in `packages/db`) — Open Prisma Studio (GUI for your database)
+- `bunx prisma migrate dev` (in `packages/db`) — Run database migrations
+- `bunx prisma generate` (in `packages/db`) — Generate Prisma client
+
+### Production
+
+- `bun run start:prod` — Start API in production mode
+- `bun run build && bun run start` — Build and start everything
+
+## Deployment
+
+### Coolify / Vercel
+
+1. Set environment variables:
+   - `DATABASE_URL` — PostgreSQL connection string
+   - `API_KEY` — API key for authentication
+2. Deploy with build command: `bun run build`
+3. Start command: `bun run start:prod` (for API) or `bun run start` (for web)
+
+## Environment Variables
+
+The application requires the following environment variables:
+
+- `DATABASE_URL` — PostgreSQL connection string (required)
+- `API_KEY` — API key for authentication (optional)
+- `NODE_ENV` — Environment mode (development/production)
+
+Example:
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+API_KEY="your-api-key-here"
+NODE_ENV="development"
 ```
 
-Make sure to update the values to match your local setup if needed.
+## FAQ
+
+### 🐛 Common Issues
+
+**Q: `Environment variable not found: DATABASE_URL`**
+A: Make sure you created `.env` file in the root directory and it contains `DATABASE_URL`. Run:
+
+```bash
+echo 'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"' > .env
+```
+
+**Q: `Cannot find module '@repo/db'`**
+A: Run `bun run setup` to install dependencies and generate Prisma client.
+
+**Q: `Database connection failed`**
+A: Make sure PostgreSQL is running:
+
+```bash
+docker-compose up -d
+```
+
+**Q: `Port 3000 already in use`**
+A: Either stop the process using port 3000 or change the port in `apps/api/src/main.ts` and `apps/web/package.json`.
+
+**Q: How to reset everything?**
+A: Run `bun run reset` to clean everything and start fresh.
+
+### 🔧 Development Tips
+
+- Use `bun run prisma:studio` to open Prisma Studio (database GUI)
+- Use `bun run test` to run all tests
+- Use `bun run build` to build everything for production
+- Check `turbo.json` for available tasks
