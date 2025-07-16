@@ -2,6 +2,7 @@
   "name": "@repo/db",
   "main": "./src/index.ts",
   "private": true,
+  "type": "commonjs",
   "postinstall": "bunx prisma generate",
   "scripts": {
     "generate": "prisma generate",
