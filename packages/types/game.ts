@@ -1,3 +1,8 @@
+import { Person } from "./person";
+import { Starship } from "./starship";
+
+export type GameResource = Person | Starship;
+
 export enum GameResourceType {
     PERSON = 'PERSON',
     STARSHIP = 'STARSHIP',
@@ -5,12 +10,9 @@ export enum GameResourceType {
 
 export interface GameRound {
     id: string;
-    gameId: string;
-    leftId: string;
-    rightId: string;
-    leftValue: number;
-    rightValue: number;
-    winnerId?: string;
+    left: GameResource;
+    right: GameResource;
+    winner: GameResource | null;
     createdAt: Date;
 }
 
@@ -18,5 +20,4 @@ export interface Game {
     id: string;
     resourceType: GameResourceType;
     createdAt: Date;
-    rounds?: GameRound[];
 }

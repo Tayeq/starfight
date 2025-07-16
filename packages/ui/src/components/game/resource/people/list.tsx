@@ -14,7 +14,9 @@ function PeopleList({ people, ...props }: PeopleListProps) {
       renderItem={(person) => (
         <div className="flex justify-between items-center gap-2 max-h-[20vh] overflow-y-auto">
           <p className="text-sm font-medium">{person.name}</p>
-          <Badge variant="outline">{person.mass}</Badge>
+          <Badge className="min-w-12" variant="outline">
+            {person.mass}
+          </Badge>
         </div>
       )}
       {...props}

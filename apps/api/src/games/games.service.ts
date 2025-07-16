@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateGameDto, PlayRoundDto } from '@repo/api/game/dto/create-game.dto';
+import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
+import { PlayRoundDto } from '@repo/api/game/dto/play-round.dto';
 import { GameResourceType } from '@repo/types';
 
 @Injectable()
@@ -69,7 +70,14 @@ export class GamesService {
     }
 
     async getGame(id: string) {
-        const game = await this.prisma.game.findUnique({ where: { id }, include: { rounds: true } });
+        const game = await this.prisma.game.findUnique({
+            where: { id },
+            include: {
+                rounds: {
+                    orderBy: { createdAt: 'desc' }
+                }
+            }
+        });
         if (!game) throw new NotFoundException('Game not found');
         return game;
     }

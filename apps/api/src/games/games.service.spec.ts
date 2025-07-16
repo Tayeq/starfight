@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GamesService } from './games.service';
 import { PrismaService } from '../prisma.service';
-import { CreateGameDto, PlayRoundDto } from '@repo/api/game/dto/create-game.dto';
+import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
+import { PlayRoundDto } from '@repo/api/game/dto/play-round.dto';
 import { GameResourceType } from '@repo/types';
 import { createGamesPrismaMock, TEST_GAME, TEST_GAME_ID, createPersonPrismaMock, createStarshipPrismaMock, createRoundPrismaMock, TEST_ROUND, TEST_ROUND_ID } from './games.mock';
 

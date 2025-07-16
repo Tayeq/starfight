@@ -3,7 +3,8 @@
 import { ResourceCard } from '@repo/ui/components/game/resource/card';
 import { GameResourceType } from '@repo/types';
 import { createGame } from './actions';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -11,7 +12,7 @@ import { useEffect } from 'react';
 const initialState = { id: undefined, error: undefined };
 
 export function NewGameForm({ type }: { type: GameResourceType }) {
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     () => createGame(type),
     initialState,
   );

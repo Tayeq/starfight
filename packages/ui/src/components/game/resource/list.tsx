@@ -12,7 +12,7 @@ export function ResourceList<T>({
   ...props
 }: ResourceListProps<T>) {
   return (
-    <div {...props}>
+    <div {...props} className="space-y-1 min-w-60">
       {items.map((item, idx) => (
         <div key={idx}>{renderItem(item)}</div>
       ))}

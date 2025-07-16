@@ -14,7 +14,9 @@ function StarshipsList({ starships, ...props }: StarshipsListProps) {
       renderItem={(starship) => (
         <div className="flex justify-between items-center gap-2">
           <p className="text-sm font-medium">{starship.name}</p>
-          <Badge variant="outline">{starship.crew}</Badge>
+          <Badge variant="outline" className="bg-indigo-500/30 min-w-24">
+            {starship.crew}
+          </Badge>
         </div>
       )}
       {...props}

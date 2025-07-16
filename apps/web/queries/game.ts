@@ -2,23 +2,6 @@ import { client } from '@/lib/apollo';
 import { gql } from '@apollo/client';
 import { GameResourceType, GameRound } from '@repo/types';
 
-const GET_GAME_ROUNDS = gql`
-  query GetGame($id: ID!) {
-    game(id: $id) {
-        id
-        resourceType
-        createdAt
-        rounds {
-            id
-            leftId
-            rightId
-            winnerId
-            createdAt
-        }
-    }
-  }
-`;
-
 async function createGame(resourceType: GameResourceType) {
   const { data } = await client.mutate({
     mutation: gql`
@@ -44,6 +27,11 @@ async function playRound(gameId: string) {
     }
     `,
     variables: { gameId },
+    context: {
+      fetchOptions: {
+        next: { tags: [`game-rounds-${gameId}`] },
+      },
+    },
   });
   return data?.playRound?.id;
 }
@@ -97,13 +85,22 @@ async function getGameRounds(gameId: string): Promise<GameRound[]> {
     }
     `,
     variables: { gameId },
+    fetchPolicy: 'no-cache',
   });
   return data?.game?.rounds ?? [];
 }
 
 async function getGame(id: string) {
   const { data } = await client.query({
-    query: GET_GAME_ROUNDS,
+    query: gql`
+    query GetGame($id: ID!) {
+      game(id: $id) {
+        id
+        resourceType
+        createdAt
+      }
+    }
+  `,
     variables: { id },
   });
 

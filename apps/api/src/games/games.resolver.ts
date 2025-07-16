@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Args, Query, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { GamesService } from './games.service';
-import { CreateGameDto, PlayRoundDto } from '@repo/api/game/dto/create-game.dto';
+import { CreateGameDto } from '@repo/api/game/dto/create-game.dto';
+import { PlayRoundDto } from '@repo/api/game/dto/play-round.dto';
 import { Game, Round } from '@repo/api/game/entities/game.entity';
 import { PrismaService } from '../prisma.service';
 import { GameResourceType } from '@repo/types';
@@ -30,14 +31,12 @@ export class GamesResolver {
     }
 }
 
-// Resolver pól relacyjnych dla Round
 @Resolver(() => Round)
 export class RoundRelationsResolver {
     constructor(private readonly prisma: PrismaService) {}
 
     @ResolveField()
     async left(@Parent() round: Round) {
-        // Pobierz grę, aby znać resourceType
         const game = await this.prisma.game.findUnique({ where: { id: round.gameId } });
         if (!game) return null;
         if (game.resourceType === GameResourceType.PERSON) {
