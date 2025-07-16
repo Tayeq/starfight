@@ -1,10 +1,11 @@
 {
   "name": "@repo/db",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "private": true,
   "type": "commonjs",
   "postinstall": "bunx prisma generate",
   "scripts": {
+    "build": "tsc",
     "generate": "prisma generate",
     "generate:watch": "bunx prisma generate --watch"
   },
@@ -20,11 +21,12 @@
   },
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
   },
   "files": [
+    "./dist/**/*",
     "./src/**/*"
   ],
   "prisma": {
